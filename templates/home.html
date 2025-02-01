@@ -6,6 +6,14 @@
     <title>Document</title>
 </head>
 <body>
+    {% if user.is_authenticated %}
+        <h1>{{user.username}}</h1>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <h1><a href="{% url 'register' %}">Registration</a></h1>
+        <h1><a href="{% url 'login' %}">Login</a></h1>
+    {% endif %}
+
     {% for post in posts %}
        <a href="{% url 'detail' post.id %}"> <h1>{{post.title}}</h1></a>
         <p>{{post.pub_date}}</p>
