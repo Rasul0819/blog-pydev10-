@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth import login, authenticate,logout
-from .forms import RegisterForm,LoginForm,BlogForm
+from .forms import RegisterForm,LoginForm,BlogForm,UpdateBlogForm
 from . import models
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -10,9 +10,9 @@ def homepage(request):
 
     return render(request,'home.html',{'posts':posts})
 
-
 def detail(request,id):
     post = get_object_or_404(models.BlogModel,id=id)
+
     return render(request,'detail.html',{'post':post})
 
 def register(request):
@@ -57,5 +57,17 @@ def create_post(request):
     else:
         form = BlogForm()
     return render(request,'create_post.html',{'form':form}) 
+
+@login_required
+def update_post(request,id):
+    post = get_object_or_404(models.BlogModel,id=id)
+    if request.method =='POST':
+        form = UpdateBlogForm(request.POST,request.FILES,instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = UpdateBlogForm(instance=post)
+    return render(request,'update_post.html',{'form':form})
 
 

@@ -6,7 +6,13 @@
     <title>Document</title>
 </head>
 <body>
+
     <a href="{% url 'home' %}">Go back</a>
+    {% if request.user == post.author %}
+        <a href="{% url 'update_post' post.id %}">Update</a>
+
+    {% endif %}
+        
     <h1>{{post.title}}</h1>
     {% if post.image %}
         <img src="{{post.image.url}}" alt="">
