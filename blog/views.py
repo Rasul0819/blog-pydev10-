@@ -1,7 +1,8 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth import login, authenticate,logout
-from .forms import RegisterForm,LoginForm
+from .forms import RegisterForm,LoginForm,BlogForm
 from . import models
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def homepage(request):
@@ -44,4 +45,17 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+@login_required#logindi soraw
+def create_post(request):
+    if request.method =='POST':
+        form = BlogForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return redirect('home')
+    else:
+        form = BlogForm()
+    return render(request,'create_post.html',{'form':form}) 
+
 
